@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Take test</title>
+</head>
+<body>
+    <form>
+        {% for i in data %}
+            <p>{{i.Question}}</p>
+            <input type="radio" id="{{i.Option_a}}" name="{{i.Question}}" value="{{i.Option_a}}">
+            <label for="{{i.Option_a}}">{{i.Option_a}}</label><br><br>
+            <input type="radio" id="{{i.Option_b}}" name="{{i.Question}}" value="{{i.Option_b}}">
+            <label for="{{i.Option_b}}">{{i.Option_b}}</label>
+            <input type="radio" id="{{i.Option_c}}" name="{{i.Question}}" value="{{i.Option_c}}">
+            <label for="{{i.Option_c}}">{{i.Option_c}}</label>
+            <input type="radio" id="{{i.Option_d}}" name="{{i.Question}}" value="{{i.Option_d}}">
+            <label for="{{i.Option_d}}">{{i.Option_d}}</label>
+            <button type="button" onclick="getSelected(name='{{i.Question}}',correct_answer='{{i.Correct_ans}}')">Submit</button>
+            <p id="{{i.Question}}"></p>
+        {% endfor %}
+    </form>
+ 
+<script>
+    function getSelected(name,correct_answer) {
+    let selected = document.querySelector(`input[name="${name}"]:checked`);
+    if (selected.value===correct_answer){
+        document.getElementById(`${name}`).innerText='Correct';
+    }
+    else{
+        document.getElementById(`${name}`).innerText='Incorrect';
+    }
+}
+</script>
+</body>
+</html>
