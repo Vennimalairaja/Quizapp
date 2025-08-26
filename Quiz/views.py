@@ -1,14 +1,16 @@
 from django.contrib import messages
 from django.shortcuts import render,redirect,get_object_or_404
-from .models import Questions
+from .models import Questions,Staff
 from .forms import QuestionForm,StaffUserCreationForm
 from django.http import HttpResponse
 from django.core import serializers
+from django.contrib.auth import login,logout,authenticate
+from django.contrib.auth.models import User
 # Create your views here.
 
 def addnewquestion(request):
     if not hasattr(request.user,'staff'):
-        return redirect('newuser')
+        return redirect('register')
     else:
         if request.method=='POST':
             question=request.POST.get('question')
@@ -39,13 +41,25 @@ def takequiz(request,qid=1):
             return HttpResponse(f'Quiz completed. Thank you for taking the test!. Your score :{total_score}')
 
     return render(request,'try.html',{'data':data})
+def firsttest(request):
+    return redirect('taketest',1)
 def Staffcreationform(request):
     form=StaffUserCreationForm()
     if request.method=='POST':
         form=StaffUserCreationForm(request.POST)
         if form.is_valid():
+            username=form.cleaned_data['username']
             form.save()
-            return HttpResponse('Success')
-    else:
-        form=StaffUserCreationForm()
-        return render(request,'Signup.html',{'form':form})
+            obj=User.objects.get(username=username)
+            Staff.objects.create(user=obj,email=obj.email)
+            return redirect('login')
+    return render(request,'Signup.html',{'form':form})
+def login_view(request):
+    if request.method=='POST':
+        username=request.POST['username']
+        password=request.POST['password']
+        user=authenticate(request,username=username,password=password)
+        if user is not None:
+            login(request,user)
+            return redirect('addnewquestion')
+    return render(request,'login.html')
