@@ -1,6 +1,7 @@
 from django.urls import path
-from .views import addquestion,takequiz
+from .views import takequiz,addnewquestion,Staffcreationform
 urlpatterns=[
-    path('questions/',addquestion,name='addquestions'),
-    path('taketest/',takequiz,name='taketest'),
+    path('taketest/<int:qid>',takequiz,name='taketest'),
+    path('addquestion/',addnewquestion,name='addnewquestion'),
+    path('createuser/',Staffcreationform,name='newuser'),
 ]

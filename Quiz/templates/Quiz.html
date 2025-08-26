@@ -1,17 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Question</title>
+  <meta charset="UTF-8">
+  <title>Quiz Form</title>
+  <style>
+    .message-box {
+  margin-bottom: 15px;
+  padding: 12px;
+  border-radius: 6px;
+  background: #e7f9ed;
+  border: 1px solid #28a745;
+}
+.success-msg {
+  color: #155724;
+  font-weight: bold;
+}
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .form-container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      width: 400px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    label {
+      font-weight: bold;
+      margin-bottom: 4px;
+      color: #333;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: border 0.3s;
+    }
+
+    input[type="text"]:focus {
+      border: 1px solid #007BFF;
+      outline: none;
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background: #007BFF;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+    div.relative-messages{
+        position:relative;
+        top:15px;
+    }
+  </style>
 </head>
 <body>
-    <br>
-    <br>
-    <form method="POST">
-        {% csrf_token %}
-        {{form.as_p}}
-        <button>Submit</button>
+
+ 
+     <div class="relative-messages">
+      {% if messages %}
+  <div class="message-box">
+    {% for message in messages %}
+      <p class="success-msg">{{ message }}</p>
+    {% endfor %}
+  </div>
+{% endif %}
+  </div>
+  <div class="form-container">
+    <form method="POST" action="{% url 'addnewquestion' %}">
+      {% csrf_token %}
+
+      <label for="question">Enter the Question:</label>
+      <input type="text" id="question" name="question" placeholder="Question" required>
+
+      <label for="option_a">Option a:</label>
+      <input type="text" id="option_a" name="option_a" placeholder="Option a" required>
+
+      <label for="option_b">Option b:</label>
+      <input type="text" id="option_b" name="option_b" placeholder="Option b" required>
+
+      <label for="option_c">Option c:</label>
+      <input type="text" id="option_c" name="option_c" placeholder="Option C" required>
+
+      <label for="option_d">Option d:</label>
+      <input type="text" id="option_d" name="option_d" placeholder="Option D" required>
+
+      <label for="correct">Correct answer:</label>
+      <input type="text" id="correct" name="correct" placeholder="Correct answer" required>
+
+      <div class="form-actions">
+        <button type="submit">Submit</button>
+      </div>
     </form>
+  </div>
+<script>
+ 
+</script>
 </body>
 </html>
