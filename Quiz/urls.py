@@ -1,9 +1,16 @@
 from django.urls import path
-from .views import takequiz,addnewquestion,Staffcreationform,firsttest,login_view
+from .views import logout_view,unauthorized_view,add_students_view,StudentLogin,studentDashboard_view
+from .views import render_dashboard,takequiz,addnewquestion,Staffcreationform,firsttest,login_view
 urlpatterns=[
-    path('taketest/',firsttest),
+    path('dashboard/',render_dashboard,name='dashboard'),
+    path('taketest/',firsttest,name='first_test'),
     path('taketest/<int:qid>',takequiz,name='taketest'),
     path('addquestion/',addnewquestion,name='addnewquestion'),
     path('Signup/',Staffcreationform,name='register'),
-    path('login/',login_view,name='login')
+    path('login/',login_view,name='login'),
+    path('logout/',logout_view,name='logout'),
+    path('unauthorized/',unauthorized_view,name='unauthorized'),
+    path('addStudents/',add_students_view,name='add_students'),
+    path('studentLogin/',StudentLogin,name='student_login'),
+    path('studentdashboard/',studentDashboard_view,name='student-Dashboard')
 ]

@@ -12,3 +12,12 @@ class StaffUserCreationForm(UserCreationForm):
     class Meta:
         model=User
         fields=['username','email','password1','password2']
+class StudentDetailsForm(forms.Form):
+    Student_name=forms.CharField(max_length=255)
+    Email=forms.EmailField()
+    score=forms.IntegerField()
+class StudentAddForm(forms.ModelForm):
+    class Meta:
+        model=User
+        fields=['username','email']
+    

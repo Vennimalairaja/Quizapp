@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Students</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+
+    /* Navbar */
+    .navbar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #fff;
+      padding: 15px 40px;
+      width: 100%;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      position: fixed;
+      top: 0;
+      left: 0;
+    }
+
+    .menu a {
+      margin: 0 20px;
+      text-decoration: none;
+      color: #333;
+      font-size: 15px;
+      transition: color 0.3s;
+    }
+
+    .menu a:hover {
+      color: #4c7dff;
+    }
+
+    /* Container for form */
+    .form-container {
+      margin-top: 120px; /* To prevent overlap with navbar */
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      width: 400px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    label {
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #333;
+    }
+
+    input[type="text"], input[type="email"], input[type="tel"] {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: border 0.3s;
+    }
+
+    input:focus {
+      border: 1px solid #007BFF;
+      outline: none;
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    button {
+      padding: 10px 20px;
+      background: #007BFF;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    /* Messages */
+    .messages {
+      margin-top: 100px;
+      width: 400px;
+    }
+    .messages div {
+      margin-bottom: 10px;
+      padding: 12px;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+    .messages .success {
+      background: #e7f9ed;
+      border: 1px solid #28a745;
+      color: #155724;
+    }
+    .messages .error {
+      background: #fbeaea;
+      border: 1px solid #dc3545;
+      color: #721c24;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="menu">
+      <a href="{% url 'dashboard' %}">Home</a>
+      <a href="{% url 'add_students' %}">Add Students</a>
+      <a href="{% url 'addnewquestion' %}">Add Questions</a>
+      <a href="{% url 'logout' %}">Logout</a>
+    </div>
+  </div>
+
+  <!-- Django Messages -->
+  {% if messages %}
+  <div class="messages">
+    {% for message in messages %}
+      <div class="{% if message.tags %}{{ message.tags }}{% endif %}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Add Students Form -->
+  <div class="form-container">
+    <p id="error"></p>
+    <form method="POST">
+      {% csrf_token %}
+
+      <label for="student_name">Student Name:</label>
+      {{form.username}}
+
+      <label for="email">Email:</label>
+      {{form.email}}
+      <div class="form-actions">
+        <button type="submit">Add Student</button>
+      </div>
+    </form>
+     <p style="margin-top: 15px; font-size: 14px; color: #555;">
+    📢 All added students will be notified of the test through their registered email/phone.
+  </p>
+  </div>
+<script>
+    document.querySelector('#id_username').placeholder='Enter Student name';
+    document.querySelector('#id_email').placeholder='Enter Email';
+    form=document.querySelector('form');
+    errorMsg=document.querySelector('#error');
+    let phone_num=document.querySelector('#id_password1')
+    phone_num.placeholder='Enter phone number';
+    function isValidPhoneNumber(phone) {
+    const regex = /^\d{10}$/;
+    return regex.test(phone);
+    }
+    form.addEventListener('submit',function(event){
+        const phone=document.querySelector('#id_password1').value;
+        if (!isValidPhoneNumber(phone)){
+            event.preventDefault();
+            errorMsg.textContent='Please enter a Valid 10-digit phone number';
+        }
+    });
+
+</script>
+</body>
+</html>
