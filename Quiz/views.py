@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from django.core import serializers
 from django.contrib.auth import login,logout,authenticate
 from django.contrib.auth.models import User
+from .sendmail import send_email
 # Create your views here.
 def render_dashboard(request):
     if not hasattr(request.user,'staff'):
@@ -102,8 +103,28 @@ def add_students_view(request):
             user1.set_password("Kendrick@579")
             user1.save()
             user=User.objects.get(username=student_name)
-            Students.objects.create(Student_name=student_name,
+            student=Students.objects.create(Student_name=student_name,
             Email=Email,Staff=request.user.staff,Student=user,score=0)
+            content=f'''Hello {student.Student_name},
+
+You have been invited to take a test assigned by {student.Staff.user.username}.
+
+📝 Test Details:  
+- Assigned by: {student.Staff.user.username}  
+- Your Username: {student.Student_name}  
+- Your Password: Kendrick@579  
+
+Please log in to the Quiz Portal using the above credentials and complete the test within the given time.  
+
+👉 Login here: http://127.0.0.1:8000/studentLogin
+
+We wish you the best of luck!  
+If you face any issues logging in, please contact your teacher/staff.  
+
+Best regards,  
+Quiz App Team
+'''
+            send_email(receiver=student.Email,Subject='Invitation to take your Quiz test',content=content)
             messages.success(request,f'Student details Updated Succesfully!. {student_name} will be notified of the test')
             return render(request,'addStudents.html',{'form':form})
         else:
