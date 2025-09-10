@@ -38,4 +38,11 @@ class Students(models.Model):
     def __str__(self):
         return self.Student_name
 
+class Student_results(models.Model):
+    student=models.ForeignKey(Students,on_delete=models.CASCADE)
+    Question=models.CharField(max_length=300)
+    student_answer=models.CharField(max_length=200)
+    correct_answer=models.CharField(max_length=200)
+    took_test=models.BooleanField(default=False)
+
 

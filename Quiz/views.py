@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import render,redirect,get_object_or_404
-from .models import Questions,Staff,Question,Students
+from .models import Questions,Staff,Question,Students,Student_results
 from .forms import QuestionForm,StaffUserCreationForm,StudentDetailsForm,StudentAddForm
 from django.http import HttpResponse
 from django.core import serializers
@@ -8,6 +8,12 @@ from django.contrib.auth import login,logout,authenticate
 from django.contrib.auth.models import User
 from .sendmail import send_email
 # Create your views here.
+def custom_csrf_view(request,reason=''):
+    return redirect('login')
+
+def custom_permission_denied(request,exception=None):
+    return render(request,'404.html')
+
 def render_dashboard(request):
     if not hasattr(request.user,'staff'):
         return redirect('unauthorized')
@@ -46,9 +52,13 @@ def takequiz(request,qid=1):
             if data.Correct_ans==selected:
                 student.score+=1
                 student.save()
+                
             else:
-                student.score-=1
-                student.save()
+                if student.score>0:
+                    student.score-=1
+                    student.save()
+            result=Student_results.objects.create(student=request.user.students,
+                Question=data.Question,student_answer=selected,correct_answer=data.Correct_ans)
             if qid<len(Questions):
                 return redirect('taketest',next_qid)
             else:
@@ -77,7 +87,7 @@ def takequiz(request,qid=1):
                 student.save()
                 send_email(receiver=request.user.students.Email,Subject='Thank you for completing the Exam',content=content)
                 messages.success(request,'Test completed you can log out!')
-                return render(request,'try.html',{'data':data})
+                return redirect('student-Dashboard')
         return render(request,'try.html',{'data':data})
 
 def firsttest(request):
@@ -137,6 +147,7 @@ def add_students_view(request):
                     user=User.objects.get(username=student_name)
                     student=Students.objects.create(Student_name=student_name,
                     Email=Email,Staff=request.user.staff,Student=user,score=0)
+            
                     content=f'''
                     Dear {student.Student_name},
 
@@ -276,3 +287,12 @@ def update_students_view(request):
         messages.success(request,'Invitation sent successfully!')
         return render(request,'Studentdashboard.html',{'students':students})
     return render(request,'Studentdashboard.html',{'students':students})
+
+def score_view(request):
+    if request.user.is_authenticated:
+        if hasattr(request.user,'students'):
+            student_result=Student_results.objects.filter(student=request.user.students)
+            score=request.user.students.score
+            return render(request,'view_score.html',{"answers":student_result,"score":score})
+    else:
+        return redirect('unauthorized')

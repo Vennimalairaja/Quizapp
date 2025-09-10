@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-00*zo*wol7u6_qye7s6jhnm2=qjrgt974#w#rmi_3b)loy3tx-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -121,3 +121,8 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CSRF_FAILURE_VIEW = "Quiz.views.custom_csrf_view"
+
+handler403 = "Quiz.views.custom_permission_denied"
+
