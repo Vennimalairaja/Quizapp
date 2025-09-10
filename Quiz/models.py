@@ -34,6 +34,7 @@ class Students(models.Model):
     Email=models.EmailField(max_length=255)
     score=models.IntegerField()
     Staff=models.ForeignKey(Staff,on_delete=models.CASCADE)
+    took_test=models.BooleanField(default=False)
     def __str__(self):
         return self.Student_name
 

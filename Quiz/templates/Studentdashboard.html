@@ -1,0 +1,185 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Manage Students</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+    }
+
+    /* Navbar container */
+    .navbar {
+      display: flex;
+      justify-content: center; /* center items */
+      align-items: center;
+      background-color: #fff;
+      padding: 15px 40px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    /* Menu links */
+    .menu a {
+      margin: 0 20px;
+      text-decoration: none;
+      color: #333;
+      font-size: 15px;
+      transition: color 0.3s;
+    }
+
+    .menu a:hover {
+      color: #4c7dff;
+    }
+
+    /* Page container */
+    .dashboard-container {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    .card {
+      border: 1px solid #ddd;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 10px;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    h1, h2 {
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: bold;
+      color: #444;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button {
+      background: #4c7dff;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #3a63cc;
+    }
+
+    .remove-btn {
+      background: #e74c3c;
+    }
+
+    .remove-btn:hover {
+      background: #c0392b;
+    }
+    .messages{
+              margin-top: 100px;
+      width: 400px;
+    }
+    .messages div {
+      margin-bottom: 10px;
+      padding: 12px;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+    .messages .success {
+      background: #e7f9ed;
+      border: 1px solid #28a745;
+      color: #155724;
+    }
+    .messages .error {
+      background: #fbeaea;
+      border: 1px solid #dc3545;
+      color: #721c24;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="menu">
+      <a href="{% url 'dashboard' %}">Home</a>
+      <a href="{% url 'add_students' %}">Add Students</a>
+      <a href="{% url 'staff-view' %}">Update students</a>
+      <a href="{% url 'addnewquestion' %}">Add Questions</a>
+      <a href="{% url 'logout' %}">Logout</a>
+      <br><br>
+      <form method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="inform">
+        <button type="submit"title='This button will send a mail to all the students regarding about the Test'>Inform students</button>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- Main content -->
+  <div class="dashboard-container">
+       {% if messages %}
+  <div class="messages">
+    {% for message in messages %}
+      <div class="{% if message.tags %}{{ message.tags }}{% endif %}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+    <h1>👩‍🏫 Student Management</h1>
+    <p>Here you can , update existing details, or remove students.</p>
+
+    <!-- Update Student -->
+    <div class="card">
+      <h2>✏️ Update Student</h2>
+      <form method="POST" action="">
+        <input type="hidden" name="action" value="update">
+        {% csrf_token %}
+        <label>Select Student:</label>
+        <select name="student_id" required>
+          {% for student in students %}
+          <option value="{{ student.Student_name }}">{{ student.Student_name }}</option>
+          {% endfor %}
+        </select>
+
+        <label>New Email:</label>
+        <input type="email" name="email">
+
+        <button type="submit">Update</button>
+      </form>
+    </div>
+
+    <!-- Remove Student -->
+    <div class="card">
+      <h2>🗑️ Remove Student</h2>
+      <form method="POST" action="">
+        <input type="hidden" name="action" value="delete">
+        {% csrf_token %}
+        <label>Select Student:</label>
+        <select name="student_id" required>
+          {% for student in students %}
+          <option value="{{ student.Student_name }}">{{ student.Student_name }}</option>
+          {% endfor %}
+        </select>
+        <button type="submit" class="remove-btn">Remove</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
+

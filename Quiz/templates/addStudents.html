@@ -126,8 +126,15 @@
     <div class="menu">
       <a href="{% url 'dashboard' %}">Home</a>
       <a href="{% url 'add_students' %}">Add Students</a>
+      <a href="{% url 'staff-view' %}">Update students</a>
       <a href="{% url 'addnewquestion' %}">Add Questions</a>
       <a href="{% url 'logout' %}">Logout</a>
+      <br><br>
+      <form method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="inform">
+        <button type="submit"title='This button will send a mail to all the students regarding about the Test'>Inform students</button>
+      </form>
     </div>
   </div>
 
