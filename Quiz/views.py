@@ -16,7 +16,7 @@ def custom_permission_denied(request,exception=None):
 
 def render_dashboard(request):
     if not hasattr(request.user,'staff'):
-        return redirect('unauthorized')
+        return redirect('login')
     return render(request,'dashboard.html')
 
 def addnewquestion(request):
@@ -101,7 +101,33 @@ def Staffcreationform(request):
             username=form.cleaned_data['username']
             form.save()
             obj=User.objects.get(username=username)
-            Staff.objects.create(user=obj,email=obj.email)
+            user=Staff.objects.create(user=obj,email=obj.email)
+            content=f'''
+            Hi {username},
+
+Welcome to QuizTrack! 🚀
+We’re excited to have you on board. With QuizTrack, you can:
+
+✅ Create and manage quizzes for your students
+✅ Add students and assign quizzes to them
+✅ Track each student’s score and monitor their overall progress
+
+Getting started is simple:
+
+Log in to your dashboard
+
+Add your students
+
+Create your first quiz and start tracking results
+
+👉 [http://127.0.0.1/dashboard]
+
+If you ever need help, feel free to reply to this email—we’re here to support you.
+
+Happy teaching,
+The QuizTrack Team
+            '''
+            send_email(receiver=user.email,Subject='🎉 Welcome to QuizTrack – Start Creating Your First Quiz!',content=content)
             return redirect('login')
     return render(request,'Signup.html',{'form':form})
 
@@ -129,6 +155,14 @@ def logout_view(request):
 def unauthorized_view(request):
     return render(request,'unauthorized.html')
 
+def staff_results_view(request):
+    if request.user.is_authenticated:
+        if hasattr(request.user,'staff'):
+            data=request.user.staff.students_set.all().order_by('-score')
+            return render(request,'staff_results.html',{'students':data})
+        return redirect('unauthorized')
+    else:
+        return redirect('unauthorized')
 def add_students_view(request):
     if request.user.is_authenticated:
         if hasattr(request.user,'staff'):
@@ -212,9 +246,17 @@ def does_user_exist(Email):
 
 def studentDashboard_view(request):
     if request.user.is_authenticated:
-        return render(request,'studentDashboard.html')
+        if hasattr(request.user,'students'):
+            return render(request,'studentDashboard.html')
+        return redirect('unauthorized')
     else:
         return redirect('unauthorized')
+
+def view_score_staff(request,student):
+    student=Students.objects.get(Student_name=student)
+    data=Student_results.objects.filter(student=student)
+    score=student.score
+    return render(request,'view_score.html',{'answers':data,'score':score,'student':student.Student_name})
 
 def StudentLogin(request):
     if request.user.is_authenticated:
@@ -294,5 +336,8 @@ def score_view(request):
             student_result=Student_results.objects.filter(student=request.user.students)
             score=request.user.students.score
             return render(request,'view_score.html',{"answers":student_result,"score":score})
+        elif  hasattr(request.user,'staff'):
+            data=request.user.staff.students_set.all().order_by('-score')
+            return render(request,'staff_results.html',{'students':data})
     else:
         return redirect('unauthorized')

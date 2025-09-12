@@ -1,4 +1,5 @@
 from django.urls import path
+from .views import staff_results_view,view_score_staff
 from .views import logout_view,unauthorized_view,add_students_view,StudentLogin,studentDashboard_view,update_students_view
 from .views import render_dashboard,takequiz,addnewquestion,Staffcreationform,firsttest,login_view,score_view
 urlpatterns=[
@@ -14,5 +15,7 @@ urlpatterns=[
     path('studentLogin/',StudentLogin,name='student_login'),
     path('studentdashboard/',studentDashboard_view,name='student-Dashboard'),
     path('staffdashboard/',update_students_view,name='staff-view'),
-    path('viewscore',score_view,name='student-score')
+    path('viewscore/',score_view,name='student-score'),
+    path('staffresult/',staff_results_view,name='staff-results'),
+    path('viewstudentscore/<str:student>',view_score_staff,name='staff-score')
 ]

@@ -37,8 +37,11 @@
 </head>
 <body>
   <div class="container">
+    {% if student %}
+          <h2 class="mb-4 text-center">📊 {{student}} Test Results</h2>
+    {% else %}
     <h2 class="mb-4 text-center">📊 Your Test Results</h2>
-
+    {% endif %}
     {% for ans in answers %}
       <div class="card p-3">
         <h5>{{ ans.Question }}</h5>

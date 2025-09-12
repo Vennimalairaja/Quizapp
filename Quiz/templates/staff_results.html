@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Staff - Test Results</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      background: #f5f7fb;
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      margin-top: 50px;
+    }
+    .card {
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .table {
+      margin-top: 20px;
+    }
+    .logout-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+    h2 {
+      margin-bottom: 30px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="{% url 'logout' %}" class="btn btn-danger logout-btn">Logout</a>
+    <h2 class="text-center">📊 Students Test Results</h2>
+
+    <div class="card p-4">
+      {% if students %}
+        <table class="table table-striped">
+          <thead class="thead-dark">
+            <tr>
+              <th>Student Name</th>
+              <th>Email</th>
+              <th>Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for student in students %}
+              <tr>
+                <td><a href="{% url 'staff-score' student.Student_name %}">{{ student.Student_name }}</a></td>
+                <td>{{ student.Email }}</td>
+                <td>{{ student.score }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p class="text-center">No students have taken the test yet.</p>
+      {% endif %}
+    </div>
+  </div>
+</body>
+</html>
